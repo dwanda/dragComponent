@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-
+    <example1></example1>
   </div>
 </template>
 
 <script>
-import example1 from './components/HelloWorld.vue'
+import example1 from './components/example1.vue'
 
 export default {
   name: 'app',

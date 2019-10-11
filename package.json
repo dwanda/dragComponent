@@ -1,10 +1,14 @@
 {
   "name": "carddragger",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "description": "基于vue的卡片拖拽排列组件",
+  "main": "lib/carddragger.umd.min.js",
+  "keyword": "carddragger dragger mover",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "lib": "vue-cli-service build --target lib --name carddragger --dest lib packages/index.js"
   },
   "dependencies": {
     "core-js": "^2.6.5",
