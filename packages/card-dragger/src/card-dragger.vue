@@ -219,7 +219,6 @@ export default {
       function swicthPosition(newItem, originItem) {
         let OldPositon = originItem.positionNum;
         let NewPositon = newItem.positionNum;
-        console.log('开始交换')
 
         SWITCHING = true
 
@@ -271,19 +270,18 @@ export default {
         document.querySelector(".moveBox").style.left = that.computeLeft(that.selectMenuData.positionNum) + "px";
         that.$emit('finishDrag')
 
-        that.$nextTick(() => {
-          that.mousedownTimer = setTimeout(() => {
-            /*用0.3秒来过渡
-              时间到了的话就先隐藏拖动组件，再显示原来的组件
-              mousedownTimer在一开始对点击事件进行了判断，若还在过渡则不能进行下一次点击
-            */
-            console.log('取消事件绑定')
-            that.$set(that.selectMenuData, "selectState", false);
-            that.selectMenuData = null;
-            clearTimeout(that.mousedownTimer);
-            that.mousedownTimer = null;
-          }, 300);
-        });
+
+        that.mousedownTimer = setTimeout(() => {
+          /*用0.3秒来过渡
+            时间到了的话就先隐藏拖动组件，再显示原来的组件
+            mousedownTimer在一开始对点击事件进行了判断，若还在过渡则不能进行下一次点击
+          */
+          that.$set(that.selectMenuData, "selectState", false);
+          that.selectMenuData = null;
+          clearTimeout(that.mousedownTimer);
+          that.mousedownTimer = null;
+        }, 300);
+    
 
         document.removeEventListener("mousemove", mouseMoveListener);
         document.removeEventListener("mouseup", mouseUpListener);
