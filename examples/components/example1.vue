@@ -21,46 +21,39 @@ export default {
       componentData: [
         {
           positionNum: 1,
-          selectState: false,
           name: "任务状态分布图",
           id: "card1",
         },
         {
           positionNum: 2,
           name: "任务数量图",
-          selectState: false,
           id: "card2",
         },
-        {
-          positionNum: 3,
-          name: "任务走势图",
-          selectState: false,
-          id: "card3",
-        },
-        {
-          positionNum: 4,
-          name: "完成情况对比图",
-          selectState: false,
-          id: "card4",
-        },
-        {
-          positionNum: 5,
-          name: "任务分配图",
-          selectState: false,
-          id: "card5",
-        },
-        {
-          positionNum: 6,
-          name: "任务分配图2",
-          selectState: false,
-          id: "card6",
-        },
-        {
-          positionNum: 7,
-          name: "任务分配图3",
-          selectState: false,
-          id: "card7",
-        }
+        // {
+        //   positionNum: 3,
+        //   name: "任务走势图",
+        //   id: "card3",
+        // },
+        // {
+        //   positionNum: 4,
+        //   name: "完成情况对比图",
+        //   id: "card4",
+        // },
+        // {
+        //   positionNum: 5,
+        //   name: "任务分配图",
+        //   id: "card5",
+        // },
+        // {
+        //   positionNum: 6,
+        //   name: "任务分配图2",
+        //   id: "card6",
+        // },
+        // {
+        //   positionNum: 7,
+        //   name: "任务分配图3",
+        //   id: "card7",
+        // }
       ],
     }
   },

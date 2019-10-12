@@ -77,10 +77,6 @@ export default {
       type:Number,
       default:2
     },
-    headerHide:{
-      type:Boolean,
-      default:false
-    },
     cardOutsideWidth:{
       type:Number,
       default:590      
@@ -196,8 +192,6 @@ export default {
       function positionDetect(newItem, originItem, moveItemTop, moveItemLeft) {
         let itemTop = that.computeTop(newItem.positionNum);
         let itemleft = that.computeLeft(newItem.positionNum);
-        
-        //定个最小值
 
         //从左右进行位置检测
         if (moveItemTop > itemTop - that.detectDistance && moveItemTop < itemTop + that.detectDistance) {
@@ -300,6 +294,11 @@ export default {
     computeTop(num) {
       return (Math.ceil(num / this.colNum) - 1) * this.cardOutsideHeight;
     }
+  },
+  beforeMount() {
+    this.data.forEach(item=>{
+      item.selectState=false
+    })
   },
   mounted() {
     this.$nextTick(()=>{
