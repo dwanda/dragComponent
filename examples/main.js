@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue'
 
-import cardDragger from '../packages/index'
+import {installCardDragger} from '../packages/index'
 // 注册组件库
-Vue.use(cardDragger)
+Vue.use(installCardDragger)
 
 Vue.config.productionTip = false
 

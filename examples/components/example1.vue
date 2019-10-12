@@ -1,21 +1,44 @@
 <template>
   <div class="main">
-    <cardDragger :data="componentData">
+    <!-- <cardComponent 
+      :data="componentData"
+      :colNum="1"
+      :cardOutsideWidth="400"
+      :cardOutsideHeight="380"
+      :cardInsideWidth="360"
+      :cardInsideHeight="320"
+      @startDrag="startDrag"
+      @swicthPosition="swicthPosition"
+      @finishDrag="finishDrag"
+    > -->
+    <cardComponent :data="componentData">
+      <!-- <template v-slot:header="slotProps">
+        <div class="topMenuBox" >
+          <div class="menuTitle" v-if="slotProps.item.name">{{slotProps.item.name}}</div>
+          <div class="menuTitle" v-else> 默认标题 </div>
+          <div>
+             
+          </div>
+        </div>
+      </template> -->
+
       <template v-slot:content="slotProps">
         <div class="insideData">
           {{slotProps.item.name}}
         </div>
       </template>
-    </cardDragger>
+    </cardComponent>
   </div>
 </template>
 
 <script>
-
+import { cardComponent } from '../../packages/index'
 
 export default {
   name: 'example1',
-
+  components:{
+    cardComponent
+  },
   data() {
     return {
       componentData: [
@@ -29,34 +52,37 @@ export default {
           name: "任务数量图",
           id: "card2",
         },
-        // {
-        //   positionNum: 3,
-        //   name: "任务走势图",
-        //   id: "card3",
-        // },
-        // {
-        //   positionNum: 4,
-        //   name: "完成情况对比图",
-        //   id: "card4",
-        // },
-        // {
-        //   positionNum: 5,
-        //   name: "任务分配图",
-        //   id: "card5",
-        // },
-        // {
-        //   positionNum: 6,
-        //   name: "任务分配图2",
-        //   id: "card6",
-        // },
-        // {
-        //   positionNum: 7,
-        //   name: "任务分配图3",
-        //   id: "card7",
-        // }
+        {
+          positionNum: 3,
+          name: "任务走势图",
+          id: "card3",
+        },
+        {
+          positionNum: 4,
+          name: "完成情况对比图",
+          id: "card4",
+        },
+        {
+          positionNum: 5,
+          name: "任务分配图",
+          id: "card5",
+        },
+        {
+          positionNum: 6,
+          name: "任务分配图2",
+          id: "card6",
+        },
+        {
+          positionNum: 7,
+          name: "任务分配图3",
+          id: "card7",
+        }
       ],
     }
   },
+  mounted(){
+    console.log(cardComponent)
+  }
 }
 </script>
 
