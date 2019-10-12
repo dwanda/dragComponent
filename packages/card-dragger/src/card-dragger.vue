@@ -115,6 +115,7 @@ export default {
 
       let that = this;
       let DectetTimer = null;
+      let SWITCHING = false;
 
       let originTop = document.body.scrollTop === 0 
                     ? document.documentElement.scrollTop : document.body.scrollTop;
@@ -218,7 +219,10 @@ export default {
       function swicthPosition(newItem, originItem) {
         let OldPositon = originItem.positionNum;
         let NewPositon = newItem.positionNum;
-        
+        console.log('开始交换')
+
+        SWITCHING = true
+
         that.$emit('swicthPosition',OldPositon,NewPositon,originItem)
 
         //位置号码从小移动到大
@@ -252,21 +256,28 @@ export default {
             that.$set(item, "positionNum", item.positionNum + 1);
           }
           that.$set(originItem, "positionNum", NewPositon);
+
         }
       }
 
       function mouseUpListener() {
+        //取消位于交换队列的检测事件、对位置进行最后一次检测
+        clearTimeout(DectetTimer)
+        DectetTimer = null
+        throttleDetect(moveTop + (scrolTop - originTop),moveLeft)
+
         document.querySelector(".moveBox").style.transition = "all 0.3s";
         document.querySelector(".moveBox").style.top = that.computeTop(that.selectMenuData.positionNum) + "px";
         document.querySelector(".moveBox").style.left = that.computeLeft(that.selectMenuData.positionNum) + "px";
         that.$emit('finishDrag')
-        
+
         that.$nextTick(() => {
           that.mousedownTimer = setTimeout(() => {
             /*用0.3秒来过渡
               时间到了的话就先隐藏拖动组件，再显示原来的组件
               mousedownTimer在一开始对点击事件进行了判断，若还在过渡则不能进行下一次点击
             */
+            console.log('取消事件绑定')
             that.$set(that.selectMenuData, "selectState", false);
             that.selectMenuData = null;
             clearTimeout(that.mousedownTimer);
