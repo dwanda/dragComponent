@@ -7,7 +7,7 @@
         width:cardOutsideWidth*colNum+'px'}"
   >
     <div
-      class="cardBorderBox"
+      class="d_cardBorderBox"
       v-for="item of data"
       :key="item.id"
       :id="item.id"
@@ -16,47 +16,47 @@
             left:computeLeft(item.positionNum)+'px'}"
     >
       <div 
-        class="cardInsideBox" 
+        class="d_cardInsideBox" 
         :style="{ 
             width:cardInsideWidth+'px',
             height:cardInsideHeight+'px'}"
         v-if="item.selectState===false"
       >
-        <div @mousedown="touchStart($event,item.id)" class="topWrapBox">
+        <div @mousedown="touchStart($event,item.id)" class="d_topWrapBox">
           <slot name="header" v-bind:item="item">
-            <div class="topMenuBox" >
-              <div class="menuTitle" v-if="item.name">{{item.name}}</div>
-              <div class="menuTitle" v-else> 默认标题 </div>
+            <div class="d_topMenuBox" >
+              <div class="d_menuTitle" v-if="item.name">{{item.name}}</div>
+              <div class="d_menuTitle" v-else> 默认标题 </div>
             </div>
           </slot>
         </div>
-        <component :is="item.componentData" :animationState='animationState' v-if="item.componentData"></component>
+        <component :is="item.componentData" :animationState='animationState' :itemData="item" v-if="item.componentData"></component>
         <slot name="content" v-bind:item="item" v-else>
-          <div class="emptyContent">
+          <div class="d_emptyContent">
             卡片暂无内容
           </div>
         </slot>
       </div>
     </div>
 
-    <div class="cardBorderBox moveBox" v-if="selectMenuData!==null">
+    <div class="d_cardBorderBox d_moveBox" v-if="selectMenuData!==null">
       <div 
-        class="cardInsideBox"
+        class="d_cardInsideBox"
         :style="{ 
               width:cardInsideWidth+'px',
               height:cardInsideHeight+'px'}"
       >
-        <div class="topWrapBox">
+        <div class="d_topWrapBox">
           <slot name="header" v-bind:item="selectMenuData">
-            <div class="topMenuBox" >
-              <div class="menuTitle" v-if="selectMenuData.name">{{selectMenuData.name}}</div>
-              <div class="menuTitle" v-else> 默认标题 </div>
+            <div class="d_topMenuBox" >
+              <div class="d_menuTitle" v-if="selectMenuData.name">{{selectMenuData.name}}</div>
+              <div class="d_menuTitle" v-else> 默认标题 </div>
             </div>
           </slot>
         </div>
         <component :is="selectMenuData.componentData" :animationState='animationState' v-if="selectMenuData.componentData"></component>
         <slot name="content" v-bind:item="selectMenuData" v-else>
-          <div class="emptyContent">
+          <div class="d_emptyContent">
             卡片暂无内容
           </div>
         </slot>
@@ -153,8 +153,8 @@ export default {
       );
       
       this.$nextTick(() => {
-        document.querySelector(".moveBox").style.left = OriginObjPosition.left + "px";
-        document.querySelector(".moveBox").style.top = OriginObjPosition.top + "px";
+        document.querySelector(".d_moveBox").style.left = OriginObjPosition.left + "px";
+        document.querySelector(".d_moveBox").style.top = OriginObjPosition.top + "px";
       });
 
       document.addEventListener("mousemove", mouseMoveListener);
@@ -176,8 +176,8 @@ export default {
         moveTop = OriginObjPosition.top + ( event.screenY - OriginMousePosition.y );
         moveLeft = OriginObjPosition.left + ( event.screenX - OriginMousePosition.x );
 
-        document.querySelector(".moveBox").style.left = moveLeft + "px";
-        document.querySelector(".moveBox").style.top = moveTop + (scrolTop - originTop) + "px";  //这里要加上滚动的高度
+        document.querySelector(".d_moveBox").style.left = moveLeft + "px";
+        document.querySelector(".d_moveBox").style.top = moveTop + (scrolTop - originTop) + "px";  //这里要加上滚动的高度
 
         throttle.call(this,throttleDetect,100).call(this,moveTop + (scrolTop - originTop),moveLeft)         
       }
@@ -265,9 +265,9 @@ export default {
         DectetTimer = null
         throttleDetect(moveTop + (scrolTop - originTop),moveLeft)
 
-        document.querySelector(".moveBox").style.transition = "all 0.3s";
-        document.querySelector(".moveBox").style.top = that.computeTop(that.selectMenuData.positionNum) + "px";
-        document.querySelector(".moveBox").style.left = that.computeLeft(that.selectMenuData.positionNum) + "px";
+        document.querySelector(".d_moveBox").style.transition = "all 0.3s";
+        document.querySelector(".d_moveBox").style.top = that.computeTop(that.selectMenuData.positionNum) + "px";
+        document.querySelector(".d_moveBox").style.left = that.computeLeft(that.selectMenuData.positionNum) + "px";
         that.$emit('finishDrag')
 
 
@@ -294,7 +294,7 @@ export default {
             ? document.documentElement.scrollTop
             : document.body.scrollTop;
 
-        document.querySelector(".moveBox").style.top = moveTop + scrolTop - originTop + "px";
+        document.querySelector(".d_moveBox").style.top = moveTop + scrolTop - originTop + "px";
       }
     },
     computeLeft(num) {
@@ -317,22 +317,22 @@ export default {
 };
 </script>
 <style scoped>
-.cardBorderBox {  
+.d_cardBorderBox {  
   user-select: none;
   position: absolute;
   transition: all 0.3s;
 }
-.cardInsideBox {
+.d_cardInsideBox {
   border-radius: 5px;
   box-shadow: 0 0 5px #cacaca;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
-.menuTitle {
+.d_menuTitle {
   pointer-events: none;
 }
-.topMenuBox {
+.d_topMenuBox {
   height: 50px;
   display: flex;
   align-items: center;
@@ -341,15 +341,15 @@ export default {
   background-color: white;
   padding: 0px 15px;
 }
-.moveBox {
+.d_moveBox {
   z-index: 300;
   transition: none;
 }
-.topWrapBox {
+.d_topWrapBox {
   cursor: move;
   border-bottom: 1px solid #e0e0e0;
 }
-.emptyContent{
+.d_emptyContent{
   width: 100%;
   height: 100%;
   font-size: 16px;

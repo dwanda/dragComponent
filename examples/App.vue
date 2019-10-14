@@ -1,27 +1,24 @@
 <template>
   <div id="app">
-    <example1></example1>
+    <example></example>
   </div>
 </template>
 
 <script>
-import example1 from './components/example1.vue'
+// import example from './components/example1.vue'
+import example from './components/example2.vue'
 
 export default {
   name: 'app',
   components: {
-    example1
+    example
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body {
+  padding: 60px;
+  background-color: rgb(240, 240, 240);
 }
 </style>
