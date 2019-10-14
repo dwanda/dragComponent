@@ -1,29 +1,29 @@
 <template>
   <div class="main">
-<cardDragger 
-  :data="componentData"
-  :colNum="4"
-  :cardOutsideWidth="300"
-  :cardInsideWidth="260"
-  :cardOutsideHeight="310"
-  :cardInsideHeight="240"
-  @startDrag="startDrag"
-  @swicthPosition="swicthPosition"
-  @finishDrag="finishDrag"
->
-  <template v-slot:header="slotProps">
-    <div class="topMenuBox" >
-      <div class="menuTitle" v-if="slotProps.item.name">{{slotProps.item.name}}</div>
-      <div class="menuTitle" v-else> 默认标题 </div>
-    </div>
-  </template>
+    <cardDragger 
+      :data="componentData"
+      :colNum="4"
+      :cardOutsideWidth="300"
+      :cardInsideWidth="260"
+      :cardOutsideHeight="310"
+      :cardInsideHeight="240"
+      @startDrag="startDrag"
+      @swicthPosition="swicthPosition"
+      @finishDrag="finishDrag"
+    >
+      <template v-slot:header="slotProps">
+        <div class="topMenuBox" >
+          <div class="menuTitle" v-if="slotProps.item.name">{{slotProps.item.name}}</div>
+          <div class="menuTitle" v-else> 默认标题 </div>
+        </div>
+      </template>
 
-  <template v-slot:content="slotProps">
-    <div class="insideData">
-      {{slotProps.item.name}}
-    </div>
-  </template>
-</cardDragger>
+      <template v-slot:content="slotProps">
+        <div class="insideData">
+          {{slotProps.item.name}}
+        </div>
+      </template>
+    </cardDragger>
   </div>
 </template>
 
