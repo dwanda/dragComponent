@@ -1,11 +1,12 @@
 // 导入颜色选择器组件
-import cardDragger from './card-dragger'
+import cardComponent from './card-dragger'
+
+export const cardDragger = cardComponent
 
 // 存储组件列表
 const components = [
   cardDragger
 ]
-export const cardComponent = cardDragger
 
 // 定义 install 方法，接收 Vue 作为参数。如果使用 use 注册插件，则所有的组件都将被注册
 export const installCardDragger = function (Vue) {

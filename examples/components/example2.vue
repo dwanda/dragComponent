@@ -28,12 +28,12 @@
 </template>
 
 <script>
-// import { cardComponent } from '../../packages/index'
+import { cardDragger } from '../../packages/index'
 
 export default {
   name: 'example2',
   components:{
-    // cardComponent,
+    cardDragger,
   },
   data() {
     return {
