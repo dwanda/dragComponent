@@ -15,5 +15,3 @@ export const installCardDragger = function (Vue) {
   // 遍历注册全局组件
   components.map(component => Vue.component(component.name, component))
 }
-
-

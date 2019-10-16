@@ -1,9 +1,78 @@
+**首先演示一下最终效果**：
 
-这是一个基于vue实现的卡片拖动组件。可以拖动卡片，并且根据数据自动修改位置的组件，文档还没完成，计划这两天修改完成，及编写相关示例
+流畅的拖动和替换效果
+![效果演示1](https://user-gold-cdn.xitu.io/2019/10/15/16dcd7b34e2e88bb?w=1556&h=917&f=gif&s=1221410)
 
+支持组件的样式和内容自定义
+![效果演示2](https://user-gold-cdn.xitu.io/2019/10/15/16dcd7db2b2c8923?w=1556&h=917&f=gif&s=1085201)
 
-## Props：
+我自己封装了一个用vue实现的拖动卡片组件，并且发布到npm，详细地记录下来了整体制作过程。总共有三篇文章，介绍组件的制作思路和遇到的问题，以及在发布到npm上并下载使用的过程中，发生了什么问题并如何解决。
 
+- [x] 第一篇为组件封装后的使用文档及介绍  
+- [ ] 第二篇为组件的实现思路以及遇到的问题  
+- [ ] 第三篇为将组件打包并上传至npm，如何实现按需加载和下载后使用的问题
+
+这是vue实现的拖动卡片组件，主要实现了：
+- 拖动卡片与其他卡片的位置更换，并且其他卡片根据拖动的位置自动顺移
+- 拖动的时候可使用鼠标滚动
+- 卡片根据数据生成，所有参数和内容都是可以自定义的，方便应用于不同场景
+- 不同操作的事件都可获取到
+- 可以全局安装和按需加载
+
+## 如何使用？
+#### 下载carddragger
+
+```
+npm install carddragger
+```
+
+#### 全局安装
+在你vue项目的入口js文件中使用，vue-cli生成的项目一般为main.js文件
+
+```
+import {installCardDragger} from 'carddragger'
+Vue.use(installCardDragger)
+```
+
+#### 按需加载
+在组件中直接import
+
+```
+import { cardDragger } from 'carddragger'
+
+export default {
+  components:{
+    cardDragger,
+  }
+}
+```
+#### 使用示例
+**1.基础使用：**
+```
+<template>
+  <cardDragger :data="cardList">
+  </cardDragger>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      cardList: [{
+        positionNum: i,
+        name: "演示卡片"+i,
+        id: "card"+i,
+      }],
+    }
+  }
+}
+</script>
+```
+
+**2.完整示例:**  
+参照[**源码仓库**](https://github.com/dwanda/dragComponent)中的examples  
+将整个项目clone下来，npm install+npm run serve即可看到完整示例
+
+## Props（参数）：
 属性 | 说明| 类型| 默认值
 ---|---|---|---
 data | 必填，需要传入的卡片数据，具体格式请看下方解释| Array| -
@@ -15,34 +84,28 @@ cardInsideHeight| 卡片的高度| Number| 320
 detectDistance| 卡片拖动的时候，会触发交换位置的最小距离| Number| 50
 
 #### data格式示例：
-卡片的内容根据data
+卡片的内容根据data数据生成或自定义
 
 ```
 <template>
     <div>
         <cardDragger 
-        :data="componentData"
+        :data="cardList"
+        :colNum="4"
+        :cardOutsideWidth="300"
+        :cardInsideWidth="260"
+        :cardOutsideHeight="310"
+        :cardInsideHeight="240"
         />
+        <!-- 上面的属性都可自定义 -->
     </div>
 </template>
 
 <script>
-//这里的Overview只是一个示例，引入一个组件作为卡片内容
-import Overview from "./Overview"
-
 export default {
-    components: {
-        Overview
-    },
     data(){
         return{
-            data: [
-                {
-                    id: "card1",
-                    name: "测试卡片1",
-                    positionNum: 1,
-                    componentData:Overview,
-                },
+            cardList: [
                 {
                     positionNum: 2,
                     name: "测试卡片2",
@@ -58,11 +121,111 @@ export default {
 属性 | 说明| 类型| 默认值
 ---|---|---|---
 id | 必填，设置卡片的id作为唯一识别| String| -
-positionNum | 必填，设置卡片位置，从1开始依次递增| String| -
-name | 选填，设置卡片的id作为唯一识别| String| '默认标题'
-componentData | 选填，设置卡片的内容为组件数据| String| -
+positionNum | 必填，设置卡片位置，从1开始依次递增| Number| -
+name | 选填，设置卡片的标题名称| String| '默认标题'
+componentData | 选填，设置卡片的内容为组件数据，如果此参数具有数据的话，则slot传入的数据失效| Array| -
 
-## Events：
+## Slot（插槽）：
+首先先介绍一下，卡片内容分为上下两部分：
+- 上部分为卡片的==标题栏==，并且拖拽事件只有点击上部分才触发
+- 下部分为卡片的==内容==  
+
+两个部分都是可以进行自定义内容及样式的。若不添加的自定义内容的话，标题栏和内容都是默认背景为白色，显示data中的name。==若添加了自定义内容则背景需要自己设置。==
+
+#### 标题栏插槽
+
+```
+<cardDragger :data="cardList" >
+  <!-- 在组件中间插入template并设置 v-slot:header="slotProps"
+       header为标题栏的插槽名字，在里面的内容会渲染到你每一个卡片标题栏上
+       slotProps为从子组件返回的数据，及data数组里面的每一个对象数据-->
+  <template v-slot:header="slotProps">
+    <!-- 自定义内容 -->
+    <div class="topMenuBox" >
+      <div class="menuTitle" v-if="slotProps.item.name">{{slotProps.item.name}}</div>
+      <div class="menuTitle" v-else> 默认标题 </div>
+    </div>
+  </template>
+</cardDragger>
+```
+
+#### 内容插槽
+```
+<cardDragger :data="cardList">
+  <!-- 与标题栏插槽一致，但需要注意v-slot:content-->
+  <template v-slot:content="slotProps">
+    <div class="insideData">
+      {{slotProps.item.name}}
+    </div>
+  </template>
+</cardDragger>
+```
+你也可以
+
+```
+<cardDragger :data="cardList">
+  <!-- 与标题栏插槽一致，但需要注意v-slot:content-->
+  <template v-slot:content="slotProps">
+     <component :is="slotProps.item.OtherData"></component>
+     <!--这里用到的是vue的动态组件功能动态渲染组件，可传入更多属性至子组件 -->
+  </template>
+</cardDragger>
+
+//省略部分代码,加载你的组件
+import exampleChild1 from "./childComponent/exampleChild1"
+
+cardList: [
+    {
+      positionNum: 1,
+      name: "演示卡片1",
+      id: "card1",
+      OtherData:exampleChild1  
+      //OtherData这个是你自己定义的属性，注意不可与componentData属性名字重复 
+    }
+]
+
+```
+
+关于内容我做了另外一个判断，你可以将需要的组件放在data的componentData属性里面，内容会自动读取componentData的数据。当然你直接都使用slot就可以忽略这个属性。
+
+```
+import exampleChild1 from "./childComponent/exampleChild1"
+//省略部分代码
+cardList: [
+    {
+      positionNum: 1,
+      name: "演示卡片1",
+      id: "card1",
+      componentData:exampleChild1   //直接设置即可使用 
+      
+      /*componnetData传入的组件，可传入两个我定义好的Props
+      animationState：{
+        类型：Boolean,
+        功能：首次加载卡片的时候为true，之后为false
+      }
+      itemData：{
+        类型：Object,
+        功能：传入组件数据
+      }
+      */
+    }
+]
+
+//在子组件中使用props即可使用
+props:{
+    animationState:{
+      type:Boolean,
+      default:true
+    },
+    itemData:{
+      type:Object
+    }
+}
+```
+
+==渲染优先级==：data的componentData > slot > 默认内容
+
+## Events（事件）：
 
 ### startDrag  
 > **事件作用**：  
@@ -86,19 +249,6 @@ componentData | 选填，设置卡片的内容为组件数据| String| -
 > 第二个参数newPositon，是卡片需要交换的位置号码  
 > 第三个参数originItem，是卡片交换完成后的数据
 
-
-### swicthPosition  
-> **作用**：  
-> 在拖动一个卡片到另外一个卡片的位置的时候，触发此事件
-
-> **事件参数**：  
-> swicthPosition(oldPositon,newPositon,originItem)  
->
-> 第一个参数oldPositon，是卡片原来的位置号码    
-> 第二个参数newPositon，是卡片需要交换的位置号码  
-> 第三个参数originItem，是卡片交换完成后的数据  
-
-
 ### finishDrag  
 > **事件作用**：  
 > 拖拽完成松开鼠标后，触发此事件
@@ -107,11 +257,10 @@ componentData | 选填，设置卡片的内容为组件数据| String| -
 无
 
 
-## 考虑是否需要解决的问题：
-- [ ] 位置数据出现空缺则会报错
-- [ ] 快速拖动两个不同的卡片会有时间间隔
+## 需要注意的问题：
+1.data的positionNum出现空缺则会报错，必须从1依次递增
+> 考虑要不要修复ing
 
-## 其他计划：  
-- [ ] 如果有很多人需要的话我可以再封装个react版本的
-- [ ] 修改其他人需要的更多参数和扩展
-- [ ] 如果大家觉得我写得菜的话还得慢慢进修一下自己
+## 未来计划：  
+- [ ] 如果有需要的话我再封装个react版本
+- [ ] 修改其他需要的参数和进行扩展
