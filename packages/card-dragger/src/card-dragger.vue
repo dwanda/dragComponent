@@ -97,7 +97,6 @@ export default {
       type:Number,
       default:50      
     }
-    
   },
   data: () => ({
     animationState:true,

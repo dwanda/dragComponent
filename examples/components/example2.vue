@@ -52,7 +52,7 @@ export default {
     }
   },
   created(){
-    for(let i = 0; i<20; i++){
+    for(let i = 1; i<20; i++){
       let data = {
         positionNum: i,
         name: "演示卡片"+i,
