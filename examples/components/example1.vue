@@ -18,9 +18,7 @@
 
 <script>
 import { cardDragger } from '../../packages/index'
-
 import exampleChild1 from "./childComponent/exampleChild1"
-
 
 export default {
   name: 'example1',

@@ -114,10 +114,8 @@ export default {
 
       let that = this;
       let DectetTimer = null;
-      let SWITCHING = false;
 
-      let originTop = document.body.scrollTop === 0 
-                    ? document.documentElement.scrollTop : document.body.scrollTop;
+      let originTop = document.body.scrollTop === 0 ? document.documentElement.scrollTop : document.body.scrollTop;
       let scrolTop = originTop;
       //记录鼠标移动的距离
       let moveTop = 0;
@@ -152,8 +150,11 @@ export default {
       );
       
       this.$nextTick(() => {
-        document.querySelector(".d_moveBox").style.left = OriginObjPosition.left + "px";
-        document.querySelector(".d_moveBox").style.top = OriginObjPosition.top + "px";
+        let moveBoxDom = document.querySelector(".d_moveBox")
+        if(moveBoxDom){
+          moveBoxDom.style.left = OriginObjPosition.left + "px";
+          moveBoxDom.style.top = OriginObjPosition.top + "px";
+        }
       });
 
       document.addEventListener("mousemove", mouseMoveListener);
@@ -218,8 +219,6 @@ export default {
       function swicthPosition(newItem, originItem) {
         let OldPositon = originItem.positionNum;
         let NewPositon = newItem.positionNum;
-
-        SWITCHING = true
 
         that.$emit('swicthPosition',OldPositon,NewPositon,originItem)
 
