@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <cardComponent :data="componentData">
+    <cardDragger :data="componentData">
       <template v-slot:header="slotProps">
         <div class="topMenuBox" >
           <div class="menuTitle" v-if="slotProps.item.name">{{slotProps.item.name}}</div>
@@ -12,12 +12,12 @@
           </div>
         </div>
       </template>
-    </cardComponent>
+    </cardDragger>
   </div>
 </template>
 
 <script>
-import { cardComponent } from '../../packages/index'
+import { cardDragger } from '../../packages/index'
 
 import exampleChild1 from "./childComponent/exampleChild1"
 
@@ -25,7 +25,7 @@ import exampleChild1 from "./childComponent/exampleChild1"
 export default {
   name: 'example1',
   components:{
-    cardComponent,
+    cardDragger,
     exampleChild1
   },
   data() {
@@ -60,7 +60,7 @@ export default {
     }
   },
   mounted(){
-    console.log(cardComponent)
+
   }
 }
 </script>

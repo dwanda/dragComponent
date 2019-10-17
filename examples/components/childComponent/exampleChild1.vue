@@ -1,6 +1,6 @@
 <template>
   <div class="contentBox">
-      {{itemData.name}}
+      {{itemData.name}}+1
   </div>
 </template>
 

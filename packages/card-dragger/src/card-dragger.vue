@@ -54,7 +54,7 @@
             </div>
           </slot>
         </div>
-        <component :is="selectMenuData.componentData" :animationState='animationState' v-if="selectMenuData.componentData"></component>
+        <component :is="selectMenuData.componentData" :animationState='animationState' :itemData="selectMenuData" v-if="selectMenuData.componentData"></component>
         <slot name="content" v-bind:item="selectMenuData" v-else>
           <div class="d_emptyContent">
             卡片暂无内容

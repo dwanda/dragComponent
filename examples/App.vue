@@ -5,8 +5,8 @@
 </template>
 
 <script>
-// import example from './components/example1.vue'
-import example from './components/example2.vue'
+import example from './components/example1.vue'
+// import example from './components/example2.vue'
 
 export default {
   name: 'app',
