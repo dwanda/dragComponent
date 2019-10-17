@@ -178,7 +178,7 @@ export default {
         document.querySelector(".d_moveBox").style.left = moveLeft + "px";
         document.querySelector(".d_moveBox").style.top = moveTop + (scrolTop - originTop) + "px";  //这里要加上滚动的高度
 
-        throttle.call(this,throttleDetect,100).call(this,moveTop + (scrolTop - originTop),moveLeft)         
+        throttle(throttleDetect,100)(moveTop + (scrolTop - originTop),moveLeft)         
       }
 
       function throttleDetect(moveItemTop, moveItemLeft){
