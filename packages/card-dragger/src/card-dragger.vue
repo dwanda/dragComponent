@@ -195,10 +195,9 @@ export default {
       }
 
       function throttleDetect(moveItemTop, moveItemLeft){
-        console.log(moveItemTop,moveItemLeft)
         //测试直接计算位置交换
-        const newWidthNum = parseInt(((moveItemLeft - ( that.cardOutsideWidth - that.cardInsideWidth)/2)/that.cardOutsideWidth).toFixed())
-        const newHeightNum = parseInt(((moveItemTop - ( that.cardOutsideHeight - that.cardInsideHeight)/2)/that.cardOutsideHeight).toFixed())
+        const newWidthNum = Math.round(((moveItemLeft - ( that.cardOutsideWidth - that.cardInsideWidth)/2)/that.cardOutsideWidth))
+        const newHeightNum = Math.round(((moveItemTop - ( that.cardOutsideHeight - that.cardInsideHeight)/2)/that.cardOutsideHeight))
         const newPositionNum = (newWidthNum+1) + newHeightNum * that.colNum
 
         if(newPositionNum>0 && newPositionNum!==that.selectMenuData.positionNum){
