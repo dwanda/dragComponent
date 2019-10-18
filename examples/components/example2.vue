@@ -42,13 +42,13 @@ export default {
   },
   methods: {
     startDrag(event,id){
-      console.log(event,id)
+      // console.log(event,id)
     },
     swicthPosition(OldPositon,NewPositon,originItem){
-      console.log(OldPositon,NewPositon,originItem)
+      // console.log(OldPositon,NewPositon,originItem)
     },
     finishDrag(){
-      console.log('完成拖拽')
+      // console.log('完成拖拽')
     }
   },
   created(){
