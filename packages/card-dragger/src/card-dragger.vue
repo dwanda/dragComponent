@@ -100,7 +100,6 @@ export default {
   },
   data: () => ({
     animationState:true,
-    selectDom: "",
     selectMenuData: null,
     mousedownTimer: null
   }),
@@ -112,7 +111,7 @@ export default {
       //若触发了点击事件，则返回一个暴露出一个方法
       this.$emit('startDrag',event,selectId)
 
-      let that = this;
+      const that = this;
       let DectetTimer = null;
 
       let originTop = document.body.scrollTop === 0 ? document.documentElement.scrollTop : document.body.scrollTop;
@@ -134,10 +133,11 @@ export default {
       // 记录交换位置的号码
       let OldPositon = null;
       let NewPositon = null;
-      
+      // 选中的卡片的dom
+      const selectDom = document.getElementById(selectId);
+
       OriginMousePosition.x = event.screenX;
       OriginMousePosition.y = event.screenY;
-      this.selectDom = document.getElementById(selectId);
       this.selectMenuData = this.data.find(item => {
         return item.id === selectId;
       });
@@ -145,11 +145,11 @@ export default {
       //选中之后，先将原来的进行隐藏，然后创建一个一模一样的显示出来
       this.$set(this.selectMenuData, "selectState", true);
 
-      OriginObjPosition.left = parseInt(
-        this.selectDom.style.left.slice(0, this.selectDom.style.left.length - 2)
+      moveLeft = OriginObjPosition.left = parseInt(
+        selectDom.style.left.slice(0, selectDom.style.left.length - 2)
       );
-      OriginObjPosition.top = parseInt(
-        this.selectDom.style.top.slice(0, this.selectDom.style.top.length - 2)
+      moveTop = OriginObjPosition.top = parseInt(
+        selectDom.style.top.slice(0, selectDom.style.top.length - 2)
       );
       
       this.$nextTick(() => {
@@ -157,12 +157,12 @@ export default {
         if(moveBoxDom){
           moveBoxDom.style.left = OriginObjPosition.left + "px";
           moveBoxDom.style.top = OriginObjPosition.top + "px";
+
+          document.addEventListener("mousemove", mouseMoveListener);
+          document.addEventListener("mouseup", mouseUpListener);
+          document.addEventListener("scroll", mouseScroll);
         }
       });
-
-      document.addEventListener("mousemove", mouseMoveListener);
-      document.addEventListener("mouseup", mouseUpListener);
-      document.addEventListener("scroll", mouseScroll);
 
       function throttle (func, delay) {
         return function() {
@@ -185,38 +185,30 @@ export default {
         throttle(throttleDetect,100)(moveTop + (scrolTop - originTop),moveLeft)         
       }
 
-      function throttleDetect(moveItemTop, moveItemLeft){
-        for (let item of that.data) {
-          if (item.id != that.selectMenuData.id) {
-            positionDetect(item,that.selectMenuData,moveItemTop,moveItemLeft)
-          }
-        }
+      function mouseScroll(event) {
+        scrolTop =
+          document.body.scrollTop === 0
+            ? document.documentElement.scrollTop
+            : document.body.scrollTop;
+
+        document.querySelector(".d_moveBox").style.top = moveTop + scrolTop - originTop + "px";
       }
 
-      function positionDetect(newItem, originItem, moveItemTop, moveItemLeft) {
-        let itemTop = that.computeTop(newItem.positionNum);
-        let itemleft = that.computeLeft(newItem.positionNum);
+      function throttleDetect(moveItemTop, moveItemLeft){
+        console.log(moveItemTop,moveItemLeft)
+        //测试直接计算位置交换
+        const newWidthNum = parseInt(((moveItemLeft - ( that.cardOutsideWidth - that.cardInsideWidth)/2)/that.cardOutsideWidth).toFixed())
+        const newHeightNum = parseInt(((moveItemTop - ( that.cardOutsideHeight - that.cardInsideHeight)/2)/that.cardOutsideHeight).toFixed())
+        const newPositionNum = (newWidthNum+1) + newHeightNum * that.colNum
 
-        //从左右进行位置检测
-        if (moveItemTop > itemTop - that.detectDistance && moveItemTop < itemTop + that.detectDistance) {
-          if (
-            (moveItemLeft > itemleft && moveItemLeft < itemleft + that.cardOutsideWidth / 2) ||
-            (moveItemLeft + that.cardOutsideWidth > itemleft + that.cardOutsideWidth / 2 &&
-              moveItemLeft + that.cardOutsideWidth < itemleft + that.cardOutsideWidth)
-          ) {
-            swicthPosition(newItem, originItem);
+        if(newPositionNum>0 && newPositionNum!==that.selectMenuData.positionNum){
+          let newItem = that.data.find(item=>{
+            return item.positionNum === newPositionNum
+          })
+          if( newItem ){
+            swicthPosition(newItem, that.selectMenuData);
           }
-        } 
-        //从上下进行位置检测
-        else if (moveItemLeft >= itemleft - that.detectDistance && moveItemLeft <= itemleft + that.detectDistance) {
-          if (
-            (moveItemTop + that.cardOutsideHeight > itemTop + that.cardOutsideHeight / 2 
-             && moveItemTop + that.cardOutsideHeight < itemTop + that.cardOutsideHeight) ||
-            (moveItemTop > itemTop && moveItemTop < itemTop + that.cardOutsideHeight / 2)
-          ) {
-            swicthPosition(newItem, originItem);
-          }
-        }
+        }      
       }
 
       function swicthPosition(newItem, originItem) {
@@ -288,15 +280,6 @@ export default {
         document.removeEventListener("mouseup", mouseUpListener);
         document.removeEventListener("scroll", mouseScroll);
       }
-
-      function mouseScroll(event) {
-        scrolTop =
-          document.body.scrollTop === 0
-            ? document.documentElement.scrollTop
-            : document.body.scrollTop;
-
-        document.querySelector(".d_moveBox").style.top = moveTop + scrolTop - originTop + "px";
-      }
     },
     computeLeft(num) {
       return (num-1) % this.colNum * this.cardOutsideWidth;
@@ -343,6 +326,8 @@ export default {
   padding: 0px 15px;
 }
 .d_moveBox {
+  top:20px;
+  left: 20px;
   z-index: 300;
   transition: none;
 }

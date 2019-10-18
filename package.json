@@ -1,6 +1,6 @@
 {
   "name": "carddragger",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "private": false,
   "description": "基于vue的卡片拖拽排列组件",
   "main": "lib/carddragger.umd.min.js",

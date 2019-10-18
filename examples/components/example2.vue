@@ -2,11 +2,11 @@
   <div class="main">
     <cardDragger 
       :data="componentData"
-      :colNum="3"
-      :cardOutsideWidth="400"
-      :cardInsideWidth="360"
-      :cardOutsideHeight="300"
-      :cardInsideHeight="240"
+      :colNum="4"
+      :cardOutsideWidth="300"
+      :cardInsideWidth="260"
+      :cardOutsideHeight="260"
+      :cardInsideHeight="220"
       @startDrag="startDrag"
       @swicthPosition="swicthPosition"
       @finishDrag="finishDrag"

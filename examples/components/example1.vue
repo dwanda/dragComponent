@@ -58,7 +58,7 @@ export default {
   },
   methods:{
     finishDrag(old,newVal,item){
-      console.log(old,newVal,item)
+      // console.log(old,newVal,item)
     }
   },
   mounted(){
