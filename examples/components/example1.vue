@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <cardDragger :data="componentData">
+    <cardDragger :data="componentData" @finishDrag="finishDrag">
       <template v-slot:header="slotProps">
         <div class="topMenuBox" >
           <div class="menuTitle" v-if="slotProps.item.name">{{slotProps.item.name}}</div>
@@ -51,10 +51,14 @@ export default {
           positionNum: 4,
           name: "演示卡片4",
           id: "card4",
-          componentData:exampleChild1,
-
+          componentData:exampleChild1
         },
       ],
+    }
+  },
+  methods:{
+    finishDrag(old,newVal,item){
+      console.log(old,newVal,item)
     }
   },
   mounted(){

@@ -12,8 +12,8 @@
       :key="item.id"
       :id="item.id"
       :style="{ 
-            top:computeTop(item.positionNum)+'px',
-            left:computeLeft(item.positionNum)+'px'}"
+          top:computeTop(item.positionNum)+'px',
+          left:computeLeft(item.positionNum)+'px'}"
     >
       <div 
         class="d_cardInsideBox" 
@@ -43,8 +43,8 @@
       <div 
         class="d_cardInsideBox"
         :style="{ 
-              width:cardInsideWidth+'px',
-              height:cardInsideHeight+'px'}"
+            width:cardInsideWidth+'px',
+            height:cardInsideHeight+'px'}"
       >
         <div class="d_topWrapBox">
           <slot name="header" v-bind:item="selectMenuData">
@@ -131,6 +131,9 @@ export default {
         x: 0,
         y: 0
       };
+      // 记录交换位置的号码
+      let OldPositon = null;
+      let NewPositon = null;
       
       OriginMousePosition.x = event.screenX;
       OriginMousePosition.y = event.screenY;
@@ -217,8 +220,8 @@ export default {
       }
 
       function swicthPosition(newItem, originItem) {
-        let OldPositon = originItem.positionNum;
-        let NewPositon = newItem.positionNum;
+        OldPositon = originItem.positionNum;
+        NewPositon = newItem.positionNum;
 
         that.$emit('swicthPosition',OldPositon,NewPositon,originItem)
 
@@ -266,7 +269,7 @@ export default {
         document.querySelector(".d_moveBox").style.transition = "all 0.3s";
         document.querySelector(".d_moveBox").style.top = that.computeTop(that.selectMenuData.positionNum) + "px";
         document.querySelector(".d_moveBox").style.left = that.computeLeft(that.selectMenuData.positionNum) + "px";
-        that.$emit('finishDrag')
+        that.$emit('finishDrag',OldPositon,NewPositon,that.selectMenuData)
 
 
         that.mousedownTimer = setTimeout(() => {
