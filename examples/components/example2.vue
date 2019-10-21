@@ -2,11 +2,11 @@
   <div class="main">
     <cardDragger 
       :data="componentData"
-      :colNum="4"
-      :cardOutsideWidth="300"
-      :cardInsideWidth="260"
-      :cardOutsideHeight="260"
-      :cardInsideHeight="220"
+      :colNum="3"
+      :cardOutsideWidth="360"
+      :cardInsideWidth="320"
+      :cardOutsideHeight="250"
+      :cardInsideHeight="210"
       @startDrag="startDrag"
       @swicthPosition="swicthPosition"
       @finishDrag="finishDrag"
@@ -52,7 +52,7 @@ export default {
     }
   },
   created(){
-    for(let i = 1; i<20; i++){
+    for(let i = 1; i<7; i++){
       let data = {
         positionNum: i,
         name: "演示卡片"+i,
@@ -67,7 +67,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .main{
-  width: 1200px;
+  width: 1080px;
   margin: auto;
 }
 .insideData{
@@ -81,7 +81,7 @@ export default {
   background-color: rgb(255, 255, 255);
 }
 .topMenuBox{
-  background-color: rgb(160, 147, 129);
+  background-color: rgb(114, 157, 177);
   height: 50px;
   display: flex;
   justify-content: space-between;

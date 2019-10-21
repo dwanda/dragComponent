@@ -13,7 +13,10 @@
       :id="item.id"
       :style="{ 
           top:computeTop(item.positionNum)+'px',
-          left:computeLeft(item.positionNum)+'px'}"
+          left:computeLeft(item.positionNum)+'px',
+          width:cardOutsideWidth+'px', 
+          height:cardOutsideHeight+'px'
+      }"
     >
       <div 
         class="d_cardInsideBox" 
@@ -39,7 +42,7 @@
       </div>
     </div>
 
-    <div class="d_cardBorderBox d_moveBox" v-if="selectMenuData!==null">
+    <div class="d_cardBorderBox d_moveBox" :style="{ width:cardOutsideWidth+'px', height:cardOutsideHeight+'px'}" v-if="selectMenuData!==null">
       <div 
         class="d_cardInsideBox"
         :style="{ 
@@ -164,17 +167,6 @@ export default {
         }
       });
 
-      function throttle (func, delay) {
-        return function() {
-          if (!DectetTimer) {
-            DectetTimer = setTimeout(()=>{
-                func.apply(this, arguments);
-                DectetTimer = null;
-            }, delay);
-          }
-        }
-      }
-
       function mouseMoveListener(event) {
         moveTop = OriginObjPosition.top + ( event.screenY - OriginMousePosition.y );
         moveLeft = OriginObjPosition.left + ( event.screenX - OriginMousePosition.x );
@@ -182,7 +174,12 @@ export default {
         document.querySelector(".d_moveBox").style.left = moveLeft + "px";
         document.querySelector(".d_moveBox").style.top = moveTop + (scrolTop - originTop) + "px";  //这里要加上滚动的高度
 
-        throttle(throttleDetect,100)(moveTop + (scrolTop - originTop),moveLeft)         
+        if (!DectetTimer) {
+          DectetTimer = setTimeout(()=>{
+            cardDetect(moveTop + (scrolTop - originTop),moveLeft) 
+            DectetTimer = null;
+          }, 200);
+        }     
       }
 
       function mouseScroll(event) {
@@ -194,15 +191,16 @@ export default {
         document.querySelector(".d_moveBox").style.top = moveTop + scrolTop - originTop + "px";
       }
 
-      function throttleDetect(moveItemTop, moveItemLeft){
-        //测试直接计算位置交换
-        let newWidthNum = Math.round(((moveItemLeft - ( that.cardOutsideWidth - that.cardInsideWidth)/2)/that.cardOutsideWidth))+1
-        let newHeightNum = Math.round(((moveItemTop - ( that.cardOutsideHeight - that.cardInsideHeight)/2)/that.cardOutsideHeight))
+      function cardDetect(moveItemTop, moveItemLeft){
+        //计算当前移动卡片，可以覆盖的号码位置
 
-        if(newHeightNum>(Math.ceil(that.data.length / that.colNum) - 1)
-          ||newHeightNum<0
-          ||newWidthNum<=0
-          ||newWidthNum>that.colNum){
+        let newWidthNum = Math.round((moveItemLeft/ that.cardOutsideWidth))+1
+        let newHeightNum = Math.round((moveItemTop/ that.cardOutsideHeight))
+
+        if(newHeightNum>(Math.ceil(that.data.length / that.colNum) - 1)||
+          newHeightNum<0||
+          newWidthNum<=0||
+          newWidthNum>that.colNum){
           return false
         }
 
@@ -226,15 +224,17 @@ export default {
         //位置号码从小移动到大
         if (NewPositon > OldPositon) {
           let changeArray = [];
-          // 找出当前需要往前移动一个位置的组件
+          //从小移动到大，那小的号码就会空出来，其余卡片应往前移动一位 
+          //找出两个号码中间对应的卡片数据
           for (let i = OldPositon + 1; i <= NewPositon; i++) {
             let pushData = that.data.find(item => {
               return item.positionNum === i;
             });
             changeArray.push(pushData);
           }
-
+          
           for (let item of changeArray) {
+            //vue的$set使更改数据的同时实时刷新样式
             that.$set(item, "positionNum", item.positionNum - 1);
           }
           that.$set(originItem, "positionNum", NewPositon);
@@ -243,6 +243,8 @@ export default {
         //位置号码从大移动到小
         if (NewPositon < OldPositon) {
           let changeArray = [];
+          //从大移动到小，那大的号码就会空出来，其余卡片应往后移动一位 
+          //找出两个号码中间对应的卡片数据
           for (let i = OldPositon - 1; i >= NewPositon; i--) {
             let pushData = that.data.find(item => {
               return item.positionNum === i;
@@ -262,7 +264,7 @@ export default {
         //取消位于交换队列的检测事件、对位置进行最后一次检测
         clearTimeout(DectetTimer)
         DectetTimer = null
-        throttleDetect(moveTop + (scrolTop - originTop),moveLeft)
+        cardDetect(moveTop + (scrolTop - originTop),moveLeft)
 
         document.querySelector(".d_moveBox").style.transition = "all 0.3s";
         document.querySelector(".d_moveBox").style.top = that.computeTop(that.selectMenuData.positionNum) + "px";
@@ -311,6 +313,9 @@ export default {
   user-select: none;
   position: absolute;
   transition: all 0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .d_cardInsideBox {
   border-radius: 5px;
