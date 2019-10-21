@@ -74,7 +74,10 @@ export default {
   name: "cardDragger",
   props:{
     data:{
-      type:Array
+      type:Array,
+      default: function () {
+        return []
+      }
     },
     colNum:{
       type:Number,
@@ -187,13 +190,11 @@ export default {
           document.body.scrollTop === 0
             ? document.documentElement.scrollTop
             : document.body.scrollTop;
-
         document.querySelector(".d_moveBox").style.top = moveTop + scrolTop - originTop + "px";
       }
 
       function cardDetect(moveItemTop, moveItemLeft){
         //计算当前移动卡片，可以覆盖的号码位置
-
         let newWidthNum = Math.round((moveItemLeft/ that.cardOutsideWidth))+1
         let newHeightNum = Math.round((moveItemTop/ that.cardOutsideHeight))
 
@@ -271,7 +272,6 @@ export default {
         document.querySelector(".d_moveBox").style.left = that.computeLeft(that.selectMenuData.positionNum) + "px";
         that.$emit('finishDrag',OldPositon,NewPositon,that.selectMenuData)
 
-
         that.mousedownTimer = setTimeout(() => {
           /*用0.3秒来过渡
             时间到了的话就先隐藏拖动组件，再显示原来的组件
@@ -283,7 +283,6 @@ export default {
           that.mousedownTimer = null;
         }, 300);
     
-
         document.removeEventListener("mousemove", mouseMoveListener);
         document.removeEventListener("mouseup", mouseUpListener);
         document.removeEventListener("scroll", mouseScroll);
