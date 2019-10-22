@@ -98,10 +98,6 @@ export default {
     cardInsideHeight:{
       type:Number,
       default:320      
-    },
-    detectDistance:{
-      type:Number,
-      default:50      
     }
   },
   data: () => ({
