@@ -290,22 +290,20 @@ export default {
       return (Math.ceil(num / this.colNum) - 1) * this.cardOutsideHeight;
     }
   },
-  beforeMount() {
-    this.data.forEach(item=>{
-      this.$set(item,'selectState',false)
-    })
-  },
   mounted() {
     this.$nextTick(()=>{
       this.animationState = false
     })
   },
-  updated() {
-    console.log(this.data)
-    this.data.forEach(item=>{
-      this.$set(item,'selectState',false)
-    })
-  },
+  watch:{
+    data(newVal,oldVal){
+      this.data.forEach(item=>{
+        if(item.selectState === undefined){
+          this.$set(item,'selectState',false)
+        }
+      })
+    }
+  }
 };
 </script>
 <style scoped>

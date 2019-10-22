@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <button @click="addData">测试新增</button>
     <cardDragger 
       :data="componentData"
       :colNum="3"
@@ -12,7 +13,7 @@
       @finishDrag="finishDrag"
     >
       <template v-slot:header="slotProps">
-        <div class="topMenuBox" >
+        <div class="topMenuBox">
           <div class="menuTitle" v-if="slotProps.item.name">{{slotProps.item.name}}</div>
           <div class="menuTitle" v-else> 默认标题 </div>
         </div>
@@ -29,6 +30,8 @@
 
 <script>
 import { cardDragger } from '../../packages/index'
+import exampleChild1 from "./childComponent/exampleChild1"
+
 
 export default {
   name: 'example2',
@@ -49,14 +52,25 @@ export default {
     },
     finishDrag(){
       // console.log('完成拖拽')
+    },
+    addData(){
+      let num = this.componentData.length+1
+      let data = {
+        positionNum: num,
+        name: "演示卡片"+num,
+        id: "card"+num,
+        componentData:exampleChild1
+      }
+      this.componentData.push(data)
     }
   },
-  created(){
+  mounted(){
     for(let i = 1; i<7; i++){
       let data = {
         positionNum: i,
         name: "演示卡片"+i,
         id: "card"+i,
+        componentData:exampleChild1
       }
       this.componentData.push(data)
     }
