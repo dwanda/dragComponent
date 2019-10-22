@@ -1,6 +1,5 @@
 <template>
   <div
-    v-if="data"
     :style="{
         position:'relative',
         height:computeTop(data.length)+cardOutsideHeight+'px',
@@ -293,12 +292,18 @@ export default {
   },
   beforeMount() {
     this.data.forEach(item=>{
-      item.selectState=false
+      this.$set(item,'selectState',false)
     })
   },
   mounted() {
     this.$nextTick(()=>{
       this.animationState = false
+    })
+  },
+  updated() {
+    console.log(this.data)
+    this.data.forEach(item=>{
+      this.$set(item,'selectState',false)
     })
   },
 };
