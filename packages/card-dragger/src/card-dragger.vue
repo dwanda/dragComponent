@@ -11,8 +11,6 @@
       :key="item.id"
       :id="item.id"
       :style="{ 
-          top:computeTop(item.positionNum)+'px',
-          left:computeLeft(item.positionNum)+'px',
           width:cardOutsideWidth+'px', 
           height:cardOutsideHeight+'px'
       }"
@@ -22,7 +20,6 @@
         :style="{ 
             width:cardInsideWidth+'px',
             height:cardInsideHeight+'px'}"
-        v-if="item.selectState===false"
       >
         <div @mousedown="touchStart($event,item.id)" class="d_topWrapBox">
           <slot name="header" v-bind:item="item">
@@ -34,30 +31,6 @@
         </div>
         <component :is="item.componentData" :animationState='animationState' :itemData="item" v-if="item.componentData"></component>
         <slot name="content" v-bind:item="item" v-else>
-          <div class="d_emptyContent">
-            卡片暂无内容
-          </div>
-        </slot>
-      </div>
-    </div>
-
-    <div class="d_cardBorderBox d_moveBox" :style="{ width:cardOutsideWidth+'px', height:cardOutsideHeight+'px'}" v-if="selectMenuData!==null">
-      <div 
-        class="d_cardInsideBox"
-        :style="{ 
-            width:cardInsideWidth+'px',
-            height:cardInsideHeight+'px'}"
-      >
-        <div class="d_topWrapBox">
-          <slot name="header" v-bind:item="selectMenuData">
-            <div class="d_topMenuBox" >
-              <div class="d_menuTitle" v-if="selectMenuData.name">{{selectMenuData.name}}</div>
-              <div class="d_menuTitle" v-else> 默认标题 </div>
-            </div>
-          </slot>
-        </div>
-        <component :is="selectMenuData.componentData" :animationState='animationState' :itemData="selectMenuData" v-if="selectMenuData.componentData"></component>
-        <slot name="content" v-bind:item="selectMenuData" v-else>
           <div class="d_emptyContent">
             卡片暂无内容
           </div>
@@ -143,8 +116,7 @@ export default {
         return item.id === selectId;
       });
 
-      //选中之后，先将原来的进行隐藏，然后创建一个一模一样的显示出来
-      this.$set(this.selectMenuData, "selectState", true);
+      selectDom.classList.add('d_moveBox')
 
       moveLeft = OriginObjPosition.left = parseInt(
         selectDom.style.left.slice(0, selectDom.style.left.length - 2)
@@ -232,6 +204,8 @@ export default {
           for (let item of changeArray) {
             //vue的$set使更改数据的同时实时刷新样式
             that.$set(item, "positionNum", item.positionNum - 1);
+            document.querySelector('#'+item.id).style.top = that.computeTop(item.positionNum)+'px'
+            document.querySelector('#'+item.id).style.left = that.computeLeft(item.positionNum)+'px'
           }
           that.$set(originItem, "positionNum", NewPositon);
         }
@@ -250,6 +224,8 @@ export default {
 
           for (let item of changeArray) {
             that.$set(item, "positionNum", item.positionNum + 1);
+            document.querySelector('#'+item.id).style.top = that.computeTop(item.positionNum)+'px'
+            document.querySelector('#'+item.id).style.left = that.computeLeft(item.positionNum)+'px'
           }
           that.$set(originItem, "positionNum", NewPositon);
 
@@ -262,7 +238,7 @@ export default {
         DectetTimer = null
         cardDetect(moveTop + (scrolTop - originTop),moveLeft)
 
-        document.querySelector(".d_moveBox").style.transition = "all 0.3s";
+        document.querySelector(".d_moveBox").classList.add('d_transition');
         document.querySelector(".d_moveBox").style.top = that.computeTop(that.selectMenuData.positionNum) + "px";
         document.querySelector(".d_moveBox").style.left = that.computeLeft(that.selectMenuData.positionNum) + "px";
         that.$emit('finishDrag',OldPositon,NewPositon,that.selectMenuData)
@@ -272,8 +248,9 @@ export default {
             时间到了的话就先隐藏拖动组件，再显示原来的组件
             mousedownTimer在一开始对点击事件进行了判断，若还在过渡则不能进行下一次点击
           */
-          that.$set(that.selectMenuData, "selectState", false);
           that.selectMenuData = null;
+          document.querySelector(".d_moveBox").classList.remove('d_transition')
+          document.querySelector(".d_moveBox").classList.remove('d_moveBox')
           clearTimeout(that.mousedownTimer);
           that.mousedownTimer = null;
         }, 300);
@@ -288,21 +265,28 @@ export default {
     },
     computeTop(num) {
       return (Math.ceil(num / this.colNum) - 1) * this.cardOutsideHeight;
+    },
+    addCardStyle(){
+      this.$nextTick(()=>{
+        this.data.forEach(item=>{
+          document.querySelector('#'+item.id).style.top = this.computeTop(item.positionNum)+'px'
+          document.querySelector('#'+item.id).style.left = this.computeLeft(item.positionNum)+'px'
+        })
+      })
+    }
+  },
+  watch:{
+    data:{
+      handler:function(){
+        this.addCardStyle()     
+      },
+      immediate: true
     }
   },
   mounted() {
     this.$nextTick(()=>{
       this.animationState = false
     })
-  },
-  watch:{
-    data(newVal,oldVal){
-      this.data.forEach(item=>{
-        if(item.selectState === undefined){
-          this.$set(item,'selectState',false)
-        }
-      })
-    }
   }
 };
 </script>
@@ -352,5 +336,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.d_transition{
+  transition: all 0.3s;
 }
 </style>

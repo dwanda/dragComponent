@@ -21,7 +21,8 @@
 
       <template v-slot:content="slotProps">
         <div class="insideData">
-          {{slotProps.item.name}}
+          {{slotProps.item.name}}56
+          <img src="../assets/logo.png">
         </div>
       </template>
     </cardDragger>
@@ -45,13 +46,14 @@ export default {
   },
   methods: {
     startDrag(event,id){
-      // console.log(event,id)
+      console.log(event,id)
     },
     swicthPosition(OldPositon,NewPositon,originItem){
-      // console.log(OldPositon,NewPositon,originItem)
+      console.log(OldPositon,NewPositon,originItem)
     },
-    finishDrag(){
-      // console.log('完成拖拽')
+    finishDrag(OldPositon,NewPositon,originItem){
+      console.log(OldPositon,NewPositon,originItem)
+      console.log('完成拖拽')
     },
     addData(){
       let num = this.componentData.length+1
@@ -59,7 +61,6 @@ export default {
         positionNum: num,
         name: "演示卡片"+num,
         id: "card"+num,
-        componentData:exampleChild1
       }
       this.componentData.push(data)
     }
@@ -70,7 +71,6 @@ export default {
         positionNum: i,
         name: "演示卡片"+i,
         id: "card"+i,
-        componentData:exampleChild1
       }
       this.componentData.push(data)
     }
