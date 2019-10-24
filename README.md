@@ -27,6 +27,9 @@
 npm install carddragger
 ```
 
+```
+当前稳定版本：0.3.6，更新于10月24日早上11点
+```
 #### 全局安装
 在你vue项目的入口js文件中使用，vue-cli生成的项目一般为main.js文件
 
@@ -82,7 +85,6 @@ cardOutsideWidth| 卡片外部需要占据的宽度（包括无内容部分）| 
 cardOutsideHeight| 卡片外部需要占据的高度（包括无内容部分）| Number| 380
 cardInsideWidth| 卡片的宽度| Number| 560
 cardInsideHeight| 卡片的高度| Number| 320
-detectDistance| 卡片拖动的时候，会触发交换位置的最小距离| Number| 50
 
 ![](https://user-gold-cdn.xitu.io/2019/10/21/16dec11bdf2c725c?w=1479&h=702&f=png&s=31102)
 #### data格式示例：
@@ -125,7 +127,7 @@ export default {
 id | 必填，设置卡片的id作为唯一识别| String| -
 positionNum | 必填，设置卡片位置，从1开始依次递增| Number| -
 name | 选填，设置卡片的标题名称| String| '默认标题'
-componentData | 选填，设置卡片的内容为组件数据，如果此参数具有数据的话，则slot传入的数据失效| Array| -
+componentData | 选填，设置卡片的内容为组件数据，如果此参数具有数据的话，则slot传入的数据失效| 组件| -
 
 ## Slot（插槽）
 首先先介绍一下，卡片内容分为上下两部分：
@@ -199,26 +201,11 @@ cardList: [
       name: "演示卡片1",
       id: "card1",
       componentData:exampleChild1   //直接设置即可使用 
-      
-      /*componnetData传入的组件，可传入两个我定义好的Props
-      animationState：{
-        类型：Boolean,
-        功能：首次加载卡片的时候为true，之后为false
-      }
-      itemData：{
-        类型：Object,
-        功能：传入组件数据
-      }
-      */
     }
 ]
-
+//使用componnetData属性传入的组件，可使用Props获取到单个卡片数据
 //在子组件中使用props即可使用
 props:{
-    animationState:{
-      type:Boolean,
-      default:true
-    },
     itemData:{
       type:Object
     }
@@ -230,10 +217,10 @@ props:{
 ## Events（事件）
 
 ### startDrag  
-> **事件作用**：  
+> **作用**：  
 > 在点击卡片顶部标题栏的时候，触发此函数  
 
-> **事件参数**：  
+> **参数**：  
 > startDrag(event,id)  
 >
 > 第一个参数event，是点击事件的原生event  
@@ -244,7 +231,7 @@ props:{
 > **作用**：  
 > 在拖动一个卡片到另外一个卡片的位置的时候，触发此事件
 
-> **事件参数**：  
+> **参数**：  
 > swicthPosition(oldPositon,newPositon,originItem)  
 >
 > 第一个参数oldPositon，是卡片原来的位置号码  
@@ -252,10 +239,10 @@ props:{
 > 第三个参数originItem，是卡片交换完成后的数据
 
 ### finishDrag  
-> **事件作用**：  
+> **作用**：  
 > 拖拽完成松开鼠标后，触发此事件
 
-> **事件参数**：  
+> **参数**：  
 > swicthPosition(oldPositon,newPositon,originItem)  
 >
 > 第一个参数oldPositon，是卡片原来的位置号码  
@@ -270,6 +257,5 @@ props:{
 ## 未来计划
 - [ ] 如果有需要的话我再封装个react版本
 - [ ] 修改其他需要的参数和进行扩展  
-
 
 **觉得这个系列有点意思的话，点个赞支持一下呗！**
