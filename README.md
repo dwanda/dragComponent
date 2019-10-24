@@ -1,5 +1,5 @@
 ## 一个**用vue实现的拖拽排列卡片组件**
-[测试一下](https://github.com/dwanda/dragComponent/blob/master/examples/assets/logo.png)
+[测试一下](https://raw.githubusercontent.com/dwanda/dragComponent/master/examples/assets/logo.png)
 
 流畅的拖动和交换位置效果，并实时更新数据
 ![效果演示1](https://user-gold-cdn.xitu.io/2019/10/15/16dcd7b34e2e88bb?w=1556&h=917&f=gif&s=1221410)
