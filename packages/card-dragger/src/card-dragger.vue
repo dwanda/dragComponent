@@ -29,7 +29,7 @@
             </div>
           </slot>
         </div>
-        <component :is="item.componentData" :animationState='animationState' :itemData="item" v-if="item.componentData"></component>
+        <component :is="item.componentData" :itemData="item" v-if="item.componentData"></component>
         <slot name="content" v-bind:item="item" v-else>
           <div class="d_emptyContent">
             卡片暂无内容
@@ -73,8 +73,6 @@ export default {
     }
   },
   data: () => ({
-    animationState:true,
-    selectMenuData: null,
     mousedownTimer: null
   }),
   methods: {
@@ -107,14 +105,14 @@ export default {
       // 记录交换位置的号码
       let OldPositon = null;
       let NewPositon = null;
-      // 选中的卡片的dom
-      const selectDom = document.getElementById(selectId);
+      // 选中的卡片的dom和数据
+      let selectDom = document.getElementById(selectId);
+      let selectMenuData = this.data.find(item => {
+        return item.id === selectId;
+      });
 
       OriginMousePosition.x = event.screenX;
       OriginMousePosition.y = event.screenY;
-      this.selectMenuData = this.data.find(item => {
-        return item.id === selectId;
-      });
 
       selectDom.classList.add('d_moveBox')
 
@@ -125,18 +123,10 @@ export default {
         selectDom.style.top.slice(0, selectDom.style.top.length - 2)
       );
       
-      this.$nextTick(() => {
-        let moveBoxDom = document.querySelector(".d_moveBox")
-        if(moveBoxDom){
-          moveBoxDom.style.left = OriginObjPosition.left + "px";
-          moveBoxDom.style.top = OriginObjPosition.top + "px";
-
-          document.addEventListener("mousemove", mouseMoveListener);
-          document.addEventListener("mouseup", mouseUpListener);
-          document.addEventListener("scroll", mouseScroll);
-        }
-      });
-
+      document.addEventListener("mousemove", mouseMoveListener);
+      document.addEventListener("mouseup", mouseUpListener);
+      document.addEventListener("scroll", mouseScroll);
+      
       function mouseMoveListener(event) {
         moveTop = OriginObjPosition.top + ( event.screenY - OriginMousePosition.y );
         moveLeft = OriginObjPosition.left + ( event.screenX - OriginMousePosition.x );
@@ -173,12 +163,12 @@ export default {
         }
 
         const newPositionNum = (newWidthNum) + newHeightNum * that.colNum
-        if(newPositionNum!==that.selectMenuData.positionNum){
+        if(newPositionNum!==selectMenuData.positionNum){
           let newItem = that.data.find(item=>{
             return item.positionNum === newPositionNum
           })
           if( newItem ){
-            swicthPosition(newItem, that.selectMenuData);
+            swicthPosition(newItem, selectMenuData);
           }
         }      
       }
@@ -239,16 +229,14 @@ export default {
         cardDetect(moveTop + (scrolTop - originTop),moveLeft)
 
         document.querySelector(".d_moveBox").classList.add('d_transition');
-        document.querySelector(".d_moveBox").style.top = that.computeTop(that.selectMenuData.positionNum) + "px";
-        document.querySelector(".d_moveBox").style.left = that.computeLeft(that.selectMenuData.positionNum) + "px";
-        that.$emit('finishDrag',OldPositon,NewPositon,that.selectMenuData)
+        document.querySelector(".d_moveBox").style.top = that.computeTop(selectMenuData.positionNum) + "px";
+        document.querySelector(".d_moveBox").style.left = that.computeLeft(selectMenuData.positionNum) + "px";
+        that.$emit('finishDrag',OldPositon,NewPositon,selectMenuData)
 
         that.mousedownTimer = setTimeout(() => {
           /*用0.3秒来过渡
-            时间到了的话就先隐藏拖动组件，再显示原来的组件
             mousedownTimer在一开始对点击事件进行了判断，若还在过渡则不能进行下一次点击
           */
-          that.selectMenuData = null;
           document.querySelector(".d_moveBox").classList.remove('d_transition')
           document.querySelector(".d_moveBox").classList.remove('d_moveBox')
           clearTimeout(that.mousedownTimer);
@@ -282,11 +270,6 @@ export default {
       },
       immediate: true
     }
-  },
-  mounted() {
-    this.$nextTick(()=>{
-      this.animationState = false
-    })
   }
 };
 </script>

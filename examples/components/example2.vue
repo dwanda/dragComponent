@@ -18,13 +18,6 @@
           <div class="menuTitle" v-else> 默认标题 </div>
         </div>
       </template>
-
-      <template v-slot:content="slotProps">
-        <div class="insideData">
-          {{slotProps.item.name}}56
-          <img src="../assets/logo.png">
-        </div>
-      </template>
     </cardDragger>
   </div>
 </template>
@@ -71,6 +64,7 @@ export default {
         positionNum: i,
         name: "演示卡片"+i,
         id: "card"+i,
+        componentData:exampleChild1
       }
       this.componentData.push(data)
     }

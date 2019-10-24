@@ -10,10 +10,6 @@
 export default {
   name: 'exampleChild1',
   props:{
-    animationState:{
-      type:Boolean,
-      default:true
-    },
     itemData:{
       type:Object
     }
