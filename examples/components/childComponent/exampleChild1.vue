@@ -13,7 +13,10 @@ export default {
     itemData:{
       type:Object
     }
-  }
+  },
+  mounted() {
+    console.log(this.itemData)
+  },
 }
 
 </script>
